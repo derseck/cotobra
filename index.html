@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cotobra Pro: cotizaciones de obras y reformas</title>
+<meta name="description" content="Cotice obras y reformas desde el celular, sin internet. Cotobra Pro hace las cuentas, arma el PDF y se lo envía al cliente desde su propio correo." />
+<meta property="og:title" content="Cotobra Pro: Obras y reformas" />
+<meta property="og:description" content="Cotiza, organiza tu equipo y conoce tu ganancia." />
+<meta property="og:image" content="img/icono.png" />
+<meta name="theme-color" content="#c2410c" />
+<link rel="icon" href="img/icono.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --tinta: #1d1f21;
+    --acero: #46525a;
+    --papel: #fbfbf9;
+    --concreto: #e5e5e0;
+    --oxido: #c2410c;
+    --oxido-oscuro: #9a3412;
+    --cinta: #f5c400;
+    --ancho: 1120px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--papel);
+    color: var(--tinta);
+    font: 400 1.0625rem/1.6 'Archivo', system-ui, sans-serif;
+    font-stretch: 100%;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: var(--oxido-oscuro); }
+  a:focus-visible, .boton:focus-visible { outline: 3px solid var(--cinta); outline-offset: 3px; }
+  .contenedor { width: min(100% - 32px, var(--ancho)); margin-inline: auto; }
+
+  /* Encabezado */
+  .encabezado { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 18px; }
+  .marca { display: flex; align-items: center; gap: 10px; color: inherit; text-decoration: none; font-weight: 800; font-stretch: 112%; font-size: 1.15rem; }
+  .marca img { width: 36px; height: 36px; border-radius: 9px; }
+  .encabezado nav a { color: var(--acero); text-decoration: none; font-size: 0.95rem; }
+  .encabezado nav a:hover { color: var(--tinta); text-decoration: underline; }
+
+  /* Portada */
+  .portada { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px; align-items: center; padding-block: 40px 56px; }
+  h1 {
+    margin: 0 0 20px;
+    font-size: clamp(2.4rem, 5.6vw, 4.4rem);
+    line-height: 1.02;
+    font-weight: 850;
+    font-stretch: 118%;
+    letter-spacing: -0.02em;
+    max-width: 14ch;
+  }
+  .portada p { margin: 0 0 28px; font-size: 1.2rem; color: var(--acero); max-width: 36ch; }
+  .acciones { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .boton {
+    display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 24px;
+    border-radius: 12px; font-weight: 700; font-size: 1rem; text-decoration: none;
+    background: var(--oxido); color: #fff;
+  }
+  .boton:hover { background: var(--oxido-oscuro); }
+  .boton.secundario { background: transparent; color: var(--tinta); box-shadow: inset 0 0 0 2px var(--tinta); }
+  .boton.secundario:hover { background: var(--tinta); color: var(--papel); }
+  .proximamente { color: var(--acero); font-size: 0.95rem; }
+
+  .telefono {
+    justify-self: center; width: min(320px, 78vw); padding: 10px; border-radius: 38px;
+    background: #2a2d30; box-shadow: 0 30px 60px -30px rgb(29 31 33 / 55%);
+    transform: rotate(2.5deg);
+  }
+  .telefono img { border-radius: 29px; }
+
+  /* Cinta métrica: el elemento que identifica la página */
+  .cinta {
+    position: relative; height: 64px; overflow: hidden;
+    background:
+      repeating-linear-gradient(90deg, var(--tinta) 0 2px, transparent 2px 80px) 0 0 / 100% 30px no-repeat,
+      repeating-linear-gradient(90deg, var(--tinta) 0 1.5px, transparent 1.5px 40px) 0 0 / 100% 20px no-repeat,
+      repeating-linear-gradient(90deg, var(--tinta) 0 1px, transparent 1px 8px) 0 0 / 100% 11px no-repeat,
+      var(--cinta);
+    border-block: 2px solid var(--tinta);
+  }
+  .cinta ol {
+    display: flex; margin: 0; padding: 0; list-style: none; position: absolute; left: 0; bottom: 6px;
+    font-weight: 800; font-stretch: 70%; font-size: 1rem;
+  }
+  .cinta li { width: 80px; flex: none; padding-left: 5px; }
+  .cinta .oxido { color: var(--oxido-oscuro); }
+
+  /* Recorrido de una obra */
+  .recorrido { padding-block: 88px 40px; }
+  h2 { margin: 0 0 12px; font-size: clamp(1.8rem, 3.4vw, 2.6rem); line-height: 1.08; font-weight: 800; font-stretch: 112%; letter-spacing: -0.01em; }
+  .intro { margin: 0 0 56px; color: var(--acero); font-size: 1.15rem; max-width: 52ch; }
+  .paso { display: grid; grid-template-columns: 96px 1fr 300px; gap: 32px; align-items: start; padding-block: 40px; border-top: 2px solid var(--tinta); }
+  .paso:last-child { border-bottom: 2px solid var(--tinta); }
+  .numero { font-size: 4.5rem; line-height: 0.9; font-weight: 900; font-stretch: 62%; color: var(--oxido); }
+  .paso h3 { margin: 0 0 10px; font-size: 1.6rem; line-height: 1.15; font-weight: 750; font-stretch: 108%; }
+  .paso p { margin: 0 0 12px; max-width: 46ch; }
+  .paso ul { margin: 0; padding-left: 1.1em; color: var(--acero); max-width: 46ch; }
+  .paso li { margin-bottom: 4px; }
+  .captura { border-radius: 22px; border: 8px solid #2a2d30; background: #2a2d30; }
+
+  /* También incluye */
+  .tambien { background: var(--concreto); padding-block: 80px; margin-top: 64px; }
+  .rejilla { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 48px; margin-top: 40px; }
+  .rejilla h3 { margin: 0 0 6px; font-size: 1.15rem; font-weight: 750; font-stretch: 106%; }
+  .rejilla p { margin: 0; color: var(--acero); }
+  .fotos-tira { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-top: 56px; }
+  .fotos-tira figure { margin: 0; }
+  .fotos-tira img { border-radius: 18px; border: 6px solid #2a2d30; background: #2a2d30; }
+  .fotos-tira figcaption { margin-top: 10px; color: var(--acero); font-size: 0.95rem; }
+
+  /* Para quién */
+  .quien { padding-block: 88px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  .quien p { margin: 0 0 16px; max-width: 48ch; }
+  .tabla-datos { margin: 0; }
+  .tabla-datos div { display: grid; grid-template-columns: 180px 1fr; gap: 16px; padding: 14px 0; border-top: 1px solid #c9c9c3; }
+  .tabla-datos div:last-child { border-bottom: 1px solid #c9c9c3; }
+  .tabla-datos dt { font-weight: 700; }
+  .tabla-datos dd { margin: 0; color: var(--acero); }
+
+  /* Cierre */
+  .cierre { background: var(--tinta); color: var(--papel); padding-block: 72px; }
+  .cierre h2 { max-width: 18ch; }
+  .cierre p { color: #c9ccce; max-width: 50ch; margin: 0 0 28px; }
+  .cierre .boton.secundario { color: var(--papel); box-shadow: inset 0 0 0 2px var(--papel); }
+  .cierre .boton.secundario:hover { background: var(--papel); color: var(--tinta); }
+  .pie { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding-block: 28px; color: var(--acero); font-size: 0.9rem; }
+
+  @media (max-width: 900px) {
+    .portada, .quien { grid-template-columns: 1fr; }
+    .portada { padding-top: 16px; }
+    .telefono { transform: none; }
+    .paso { grid-template-columns: 64px 1fr; }
+    .paso .captura { grid-column: 2; max-width: 300px; }
+    .numero { font-size: 3.4rem; }
+    .rejilla { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    .rejilla, .fotos-tira { grid-template-columns: 1fr; }
+    .fotos-tira img { max-width: 300px; }
+    .paso { grid-template-columns: 1fr; gap: 16px; }
+    .paso .captura { grid-column: 1; }
+    .tabla-datos div { grid-template-columns: 1fr; gap: 2px; }
+    .encabezado nav { display: none; }
+  }
+</style>
+</head>
+<body>
+  <header class="contenedor encabezado">
+    <a class="marca" href="./"><img src="img/icono.png" alt="" width="36" height="36" />Cotobra Pro</a>
+    <nav aria-label="Secciones">
+      <a href="#recorrido">Cómo funciona</a>&emsp;
+      <a href="privacidad.html">Privacidad</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="contenedor portada">
+      <div>
+        <h1>Cotice la obra antes de salir de ella.</h1>
+        <p>Escoja materiales y mano de obra en el celular. Cotobra Pro hace las cuentas, arma el PDF con sus datos y se lo envía al cliente desde su propio correo. Funciona sin internet.</p>
+        <div class="acciones">
+          <a class="boton" href="mailto:derseck1102@gmail.com?subject=Quiero%20probar%20Cotobra%20Pro">Quiero probarla</a>
+          <a class="boton secundario" href="#recorrido">Ver cómo funciona</a>
+        </div>
+        <p class="proximamente" style="margin-top:16px">Para Android 10 o más reciente. Pronto en Google Play.</p>
+      </div>
+      <div class="telefono">
+        <img src="img/15-editor.png" alt="Cotización con trabajos de cocina y baño y el total abajo" width="412" height="839" />
+      </div>
+    </section>
+
+    <div class="cinta" aria-hidden="true">
+      <ol>
+        <li>0</li><li>10</li><li>20</li><li>30</li><li>40</li><li class="oxido">50</li><li>60</li><li>70</li><li>80</li><li>90</li><li class="oxido">100</li><li>110</li><li>120</li><li>130</li><li>140</li><li class="oxido">150</li><li>160</li><li>170</li><li>180</li><li>190</li><li class="oxido">200</li><li>210</li><li>220</li><li>230</li><li>240</li><li>250</li>
+      </ol>
+    </div>
+
+    <section class="contenedor recorrido" id="recorrido">
+      <h2>Una obra, de la visita al pago</h2>
+      <p class="intro">Así acompaña la app cada trabajo, desde que mide hasta que sabe cuánto ganó.</p>
+
+      <article class="paso">
+        <span class="numero" aria-hidden="true">1</span>
+        <div>
+          <h3>Cotice en minutos, con sus precios</h3>
+          <p>Busque en su lista de materiales y mano de obra, escriba la cantidad y listo. Los totales se actualizan al instante y todo se guarda solo.</p>
+          <ul>
+            <li>Separe por trabajos: baño, cocina, fachada…</li>
+            <li>Cobre un trabajo por renglones o con un valor total.</li>
+            <li>Agregue ganancia y descuento en porcentaje o en pesos.</li>
+          </ul>
+        </div>
+        <img class="captura" src="img/11-agregar-buscar.png" alt="Buscando un material en Mis precios para agregarlo" loading="lazy" width="412" height="839" />
+      </article>
+
+      <article class="paso">
+        <span class="numero" aria-hidden="true">2</span>
+        <div>
+          <h3>Envíe el PDF desde su correo</h3>
+          <p>El cliente recibe una cotización con su nombre, su logo y el total en letras. Usted decide cuánto detalle ve: cada renglón, el total por trabajo o un solo valor.</p>
+          <ul>
+            <li>Sin señal, el correo espera y sale solo cuando vuelva.</li>
+            <li>También en Excel y Word, con fotos de la obra.</li>
+            <li>Una cotización enviada no cambia: para ajustarla, haga una revisión.</li>
+          </ul>
+        </div>
+        <img class="captura" src="img/19-enviar-correo.png" alt="Pantalla para enviar la cotización por correo al cliente" loading="lazy" width="412" height="839" />
+      </article>
+
+      <article class="paso">
+        <span class="numero" aria-hidden="true">3</span>
+        <div>
+          <h3>Termine la obra y cuente los días</h3>
+          <p>Asigne a su equipo con el valor del día de cada uno. Al terminar, la app suma lo que ganó si acabó antes o resta lo que le costó la demora.</p>
+          <ul>
+            <li>Su equipo nunca aparece en lo que ve el cliente.</li>
+            <li>Indique cuántos días de más trabajó cada persona.</li>
+          </ul>
+        </div>
+        <img class="captura" src="img/38-obra-terminada.png" alt="Obra terminada con dos días de demora y la cuenta de la ganancia" loading="lazy" width="412" height="839" />
+      </article>
+
+      <article class="paso">
+        <span class="numero" aria-hidden="true">4</span>
+        <div>
+          <h3>Mire cuánto ganó</h3>
+          <p>Gráficas por semana, mes y año con la ganancia real de cada obra terminada: lo cotizado, menos descuentos, más o menos lo que pasó con el tiempo.</p>
+        </div>
+        <img class="captura" src="img/40-mis-ganancias.png" alt="Gráfica mensual de ganancias del año" loading="lazy" width="412" height="839" />
+      </article>
+    </section>
+
+    <section class="tambien">
+      <div class="contenedor">
+        <h2>Hecha para el trabajo en obra</h2>
+        <div class="rejilla">
+          <div><h3>Sin internet</h3><p>Todo funciona con el celular en modo avión. Sus datos viven en su teléfono.</p></div>
+          <div><h3>Dictado por voz</h3><p>Diga "veinte bultos de cemento" y la app propone el renglón. Necesita señal.</p></div>
+          <div><h3>Fotos de la obra</h3><p>Hasta 12 fotos con su descripción, al final del PDF.</p></div>
+          <div><h3>Trabajos guardados</h3><p>Guarde un baño típico de 10 m² y úselo para uno de 14 m²: la app ajusta las cantidades.</p></div>
+          <div><h3>Copia de seguridad</h3><p>Un archivo con todo para pasar a otro celular o guardar en Drive.</p></div>
+          <div><h3>Sin cuentas ni publicidad</h3><p>No hay registro, anuncios ni rastreadores. Nadie más ve sus precios.</p></div>
+        </div>
+        <div class="fotos-tira">
+          <figure><img src="img/33-dictado.png" alt="Dictado por voz con la tarjeta para confirmar el renglón" loading="lazy" width="412" height="839" /><figcaption>Dictar un renglón</figcaption></figure>
+          <figure><img src="img/35-fotos.png" alt="Fotos de la obra con su descripción" loading="lazy" width="412" height="839" /><figcaption>Fotos con descripción</figcaption></figure>
+          <figure><img src="img/36-mi-equipo.png" alt="Mi equipo con el valor del día de cada persona" loading="lazy" width="412" height="839" /><figcaption>Su equipo y su valor del día</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="contenedor quien">
+      <div>
+        <h2>Para el maestro y para la empresa</h2>
+        <p>Si trabaja por su cuenta, cotiza en la visita y manda el PDF antes de que el cliente llame a otro. Si tiene una empresa, cada cotización sale con su logo, sus condiciones de pago y un formato que se ve profesional.</p>
+        <p>Los precios son suyos: se cargan desde Excel o se escriben una vez, y cada cotización guarda el precio del día en que se hizo.</p>
+      </div>
+      <dl class="tabla-datos">
+        <div><dt>Moneda</dt><dd>Pesos colombianos, sin decimales</dd></div>
+        <div><dt>Documentos</dt><dd>PDF, Excel y Word</dd></div>
+        <div><dt>Envío</dt><dd>Desde su Gmail u otro correo, con contraseña de aplicación</dd></div>
+        <div><dt>Celular</dt><dd>Android 10 o más reciente</dd></div>
+        <div><dt>Impuestos</dt><dd>No calcula IVA: el total es materiales, mano de obra y otros conceptos</dd></div>
+      </dl>
+    </section>
+
+    <section class="cierre">
+      <div class="contenedor">
+        <h2>Cotiza, organiza tu equipo y conoce tu ganancia.</h2>
+        <p>Cotobra Pro llegará pronto a Google Play. Escríbanos y le enviamos la app para que la pruebe en sus próximas obras.</p>
+        <div class="acciones">
+          <a class="boton" href="mailto:derseck1102@gmail.com?subject=Quiero%20probar%20Cotobra%20Pro">Escribir a derseck1102@gmail.com</a>
+          <a class="boton secundario" href="privacidad.html">Leer la política de privacidad</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="contenedor pie">
+    <span>© 2026 Jans Cristian Renteria Jimenez</span>
+    <span><a href="privacidad.html">Política de privacidad</a></span>
+  </footer>
+</body>
+</html>
