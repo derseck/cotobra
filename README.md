@@ -1,6 +1,6 @@
 # Cotobra Pro
 
-Página de **Cotobra Pro: Obras y reformas**, app Android para cotizar obras y reformas.
+Página de **Cotobra Pro: Obras y servicios**, app Android para cotizar obras, remodelaciones y servicios técnicos (instalación y mantenimiento), sin internet.
 
 - Sitio: https://derseck.github.io/cotobra/
 - Política de privacidad: https://derseck.github.io/cotobra/privacidad.html
